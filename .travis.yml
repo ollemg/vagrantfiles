@@ -4,6 +4,7 @@ services:
   - vagrant
 
 before_install:
+- cd /alpine
 - vagrant init
 - vagrant up
 
