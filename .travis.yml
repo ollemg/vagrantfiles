@@ -1,0 +1,11 @@
+language: ruby
+
+services:
+  - vagrant
+
+before_install:
+- vagrant init
+- vagrant up
+
+script:
+- 
