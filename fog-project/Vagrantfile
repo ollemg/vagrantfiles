@@ -1,7 +1,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   config.vm.provider "virtualbox"
-  config.vm.network "public_network"
+  config.vm.network "public_network", bridge: "wlp7s0"
+  # config.vm.hostname "FOG"
   config.vm.provider "virtualbox" do |v|
      v.memory = 2048
      v.cpus = 1
@@ -10,14 +11,22 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   end
   config.vm.provision "shell", inline: <<-SHELL
-    echo "FOG" > /etc/hostname
-    yum update -y
-    yum install -y wget nmap nano
+    # yum update -y
+    yum install -y wget nmap nano curl tar
+    # echo "FOG" > /etc/hostname
+    sudo sh -c '/bin/echo -e "\n\n\n\n\n\n\n\n\n\n\" | /bin/bash <(curl -Ss https://my-netdata.io/kickstart.sh)'
     cd /opt/
     wget https://github.com/FOGProject/fogproject/archive/1.5.6.tar.gz -O fogproject-1.5.6.tar.gz
     tar -xzvf fogproject-1.5.6.tar.gz
-    wget https://github.com/netdata/netdata/releases/download/v1.15.0/netdata-v1.15.0.tar.gz
-    tar -xzvf netdata-v1.15.0.tar.gz
-  
-  SHELL
-end
+    export mode_server=N && \
+    export language_pack=y && \
+    export change_int=y && \
+    export int=eth1 && \
+    export hostname=fog.ollemg.local && \
+    export routeip=172.20.0.1 && \
+    export dnsip=8.8.8.8 && \
+    export instalation_fog=Y && \
+    cd fogproject-1.5.6/bin 
+    bash -c '/bin/echo -e "\n\n${mode_server}\n${change_int}\n${int}\ny\n${hostname}\ny\n${routeip}\ny\n${dnsip}\n\n\n${instalation_fog}\n\n\n\n" | /bin/bash ./installfog.sh'   
+    SHELL
+  end
