@@ -1,3 +1,4 @@
 alpine/.vagrant/
 fog-project/.vagrant/
 *.code-workspace
+*.rb
