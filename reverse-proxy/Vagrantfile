@@ -1,0 +1,30 @@
+# $haproxyConf = <<SCRIPT
+# yum update -y
+# echo "HAPROXY01" > /proc/sys/kernel/hostname
+# yum install gcc pcre-static pcre-devel wget tar haproxy -y
+# SCRIPT
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.provision "shell", path: "install.sh"
+  #  config.vm.provision "file", source: "/home/github/vagrantfiles/haproxy/haproxy.cfg", destination: "/etc/haproxy/haproxy.cfg"
+  # config.ssh.username = "ollemg"
+  config.vm.define "lb-ha-rp01" do |rp01|
+    rp01.vm.network "public_network", bridge: "wlp7s0"
+    rp01.vm.network "private_network", ip: "10.255.1.11"
+    rp01.vm.hostname = "LB-HA-RP01"
+    end
+  config.vm.define "lb-ha-rp02" do |rp02|
+    rp02.vm.network "public_network", bridge: "wlp7s0"
+    rp02.vm.network "private_network", ip: "10.255.1.12"
+    rp02.vm.hostname = "LB-HA-RP02"
+    end
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = 256
+    vb.cpus = 1
+    end
+end
+  Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.provision "shell", path: "install.sh"
+end
